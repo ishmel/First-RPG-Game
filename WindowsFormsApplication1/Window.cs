@@ -18,7 +18,7 @@ namespace WindowsFormsApplication1
         private const string Level_DATA_FILE_NAME = "LevelData.xml";
         private const string PLAYER_DATA_FILE_NAME = "PlayerData.xml";
         private Monster _currentMonster;
-        private LevelStats _playerLevelStats = new LevelStats(0,0,0,0,0);
+        private LevelStats _playerLevelStats
 
         public Window()
         {
