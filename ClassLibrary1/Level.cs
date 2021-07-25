@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Xml;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace Engine
 {
@@ -15,7 +15,7 @@ namespace Engine
         public int Defense { get; set; }
         public int LevelPoints { get; set; }
 
-        public LevelStats(int strength, int magic, int dexerity, int defense, int levelPoints)
+        private LevelStats(int strength, int magic, int dexerity, int defense, int levelPoints)
         {
             Strength = strength;
             Magic = magic;
@@ -25,7 +25,7 @@ namespace Engine
         }
         public static LevelStats CreateDefaultPlayer()
         {
-            LevelStats level = new LevelStats(1, 1, 1, 1, 0);
+            LevelStats level = new LevelStats(1, 1, 1, 1, 1);
             return level;
         }
 
@@ -37,7 +37,7 @@ namespace Engine
 
                 levelData.LoadXml(xmlLevelData);
 
-                int strength = Convert.ToInt32(levelData.SelectSingleNode("/Player/Stats/strength").InnerText);
+                int strength = Convert.ToInt32(levelData.SelectSingleNode("/Player/Stats/Strength").InnerText);
                 int magic = Convert.ToInt32(levelData.SelectSingleNode("/Player/Stats/Magic").InnerText);
                 int dexerity = Convert.ToInt32(levelData.SelectSingleNode("/Player/Stats/Dexerity").InnerText);
                 int defense = Convert.ToInt32(levelData.SelectSingleNode("/Player/Stats/Defense").InnerText);
@@ -55,38 +55,38 @@ namespace Engine
         }
         public string ToXmlString()
         {
-            XmlDocument levelData = new XmlDocument();
+            XmlDocument LevelData = new XmlDocument();
 
             // Create the top-level XML node
-            XmlNode player = levelData.CreateElement("Player");
-            levelData.AppendChild(player);
+            XmlNode player = LevelData.CreateElement("Player");
+            LevelData.AppendChild(player);
 
             // Create the "Stats" child node to hold the other player statistics nodes
-            XmlNode stats = levelData.CreateElement("Stats");
+            XmlNode stats = LevelData.CreateElement("Stats");
             player.AppendChild(stats);
 
             // Create the child nodes for the "Stats" node
-            XmlNode strength = levelData.CreateElement("strength");
-            strength.AppendChild(levelData.CreateTextNode(strength.ToString()));
+            XmlNode strength = LevelData.CreateElement("Strength");
+            strength.AppendChild(LevelData.CreateTextNode(Strength.ToString()));
             stats.AppendChild(strength);
 
-            XmlNode magic = levelData.CreateElement("Magic");
-            magic.AppendChild(levelData.CreateTextNode(magic.ToString()));
+            XmlNode magic = LevelData.CreateElement("Magic");
+            magic.AppendChild(LevelData.CreateTextNode(Magic.ToString()));
             stats.AppendChild(magic);
 
-            XmlNode dexerity = levelData.CreateElement("Dexerity");
-            dexerity.AppendChild(levelData.CreateTextNode(dexerity.ToString()));
+            XmlNode dexerity = LevelData.CreateElement("Dexerity");
+            dexerity.AppendChild(LevelData.CreateTextNode(Dexerity.ToString()));
             stats.AppendChild(dexerity);
 
-            XmlNode defense = levelData.CreateElement("Defense");
-            defense.AppendChild(levelData.CreateTextNode(defense.ToString()));
+            XmlNode defense = LevelData.CreateElement("Defense");
+            defense.AppendChild(LevelData.CreateTextNode(Defense.ToString()));
             stats.AppendChild(defense);
 
-            XmlNode levelPoints = levelData.CreateElement("LevelPoints");
-            levelPoints.AppendChild(levelData.CreateTextNode(levelPoints.ToString()));
+            XmlNode levelPoints = LevelData.CreateElement("LevelPoints");
+            levelPoints.AppendChild(LevelData.CreateTextNode(LevelPoints.ToString()));
             stats.AppendChild(levelPoints);
 
-            return levelData.InnerXml; // The XML document, as a string, so we can save the data to disk
+            return LevelData.InnerXml; // The XML document, as a string, so we can save the data to disk
         }
     }
 }

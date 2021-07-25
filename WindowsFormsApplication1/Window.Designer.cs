@@ -64,6 +64,7 @@
             this.StrAdd = new System.Windows.Forms.Button();
             this.lb = new System.Windows.Forms.Label();
             this.LblLevelPoints = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvInventory)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvQuests)).BeginInit();
             this.SuspendLayout();
@@ -421,11 +422,22 @@
             this.LblLevelPoints.TabIndex = 35;
             this.LblLevelPoints.Text = "0";
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.label6.Location = new System.Drawing.Point(396, 539);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(61, 17);
+            this.label6.TabIndex = 52;
+            this.label6.Text = "Weapon";
+            // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(719, 651);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.LblLevelPoints);
             this.Controls.Add(this.lb);
             this.Controls.Add(this.StrAdd);
@@ -510,6 +522,7 @@
         private System.Windows.Forms.Button StrAdd;
         private System.Windows.Forms.Label lb;
         private System.Windows.Forms.Label LblLevelPoints;
+        private System.Windows.Forms.Label label6;
     }
 }
 

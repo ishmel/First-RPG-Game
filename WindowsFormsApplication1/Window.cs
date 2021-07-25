@@ -15,10 +15,10 @@ namespace WindowsFormsApplication1
     public partial class Window : Form
     {
         private Player _player;
-        private const string Level_DATA_FILE_NAME = "LevelData.xml";
-        private const string PLAYER_DATA_FILE_NAME = "PlayerData.xml";
-        private Monster _currentMonster;
         private LevelStats _playerLevelStats;
+        private Monster _currentMonster;
+        private const string LEVEL_DATA_FILE_NAME = "levelData.xml";
+        private const string PLAYER_DATA_FILE_NAME = "playerData.xml";
 
         public Window()
         {
@@ -45,9 +45,9 @@ namespace WindowsFormsApplication1
         }
         public void playerLevel()
         {
-            if (File.Exists(Level_DATA_FILE_NAME))
+            if (File.Exists(LEVEL_DATA_FILE_NAME))
             {
-                _playerLevelStats = LevelStats.CreatePlayerFromXmlString(File.ReadAllText(Level_DATA_FILE_NAME));
+                _playerLevelStats = LevelStats.CreatePlayerFromXmlString(File.ReadAllText(LEVEL_DATA_FILE_NAME));
             }
             else
             {
@@ -203,8 +203,6 @@ namespace WindowsFormsApplication1
                 btnUsePotion.Visible = false;
             }
 
-            // Refresh player's stats
-            UpdatePlayerStats();
 
             // Refresh player's inventory list
             UpdateInventoryListInUI();
@@ -218,27 +216,15 @@ namespace WindowsFormsApplication1
             // Refresh player's potions combobox
             UpdatePotionListInUI();
 
+            // Refresh player's stats
+            UpdatePlayerStats();
+
             // Refresh levelstats
             UpdateLevelStats();
 
             ScrollToBottomOfMessages();
         }
 
-        private void UpdatePlayerStats()
-        {
-            // Refresh player information and inventory controls
-            LblHitPoints.Text = _player.CurrentHitPoints.ToString();
-            LblGold.Text = _player.Gold.ToString();
-            LblExperience.Text = _player.ExperiencePoints.ToString();
-            LblLevel.Text = _player.Level.ToString();
-
-            _playerLevelStats.Strength = Convert.ToInt32(LblStrength.Text);
-            _playerLevelStats.Magic = Convert.ToInt32(LblMagic.Text);
-            _playerLevelStats.Dexerity = Convert.ToInt32(LblDexerity.Text);
-            _playerLevelStats.Defense = Convert.ToInt32(LblDefense.Text);
-
-            _player.Level = _player.ExperiencePoints / 70 + 1;
-        }
 
         private void UpdateInventoryListInUI()
         {
@@ -433,6 +419,7 @@ namespace WindowsFormsApplication1
                 UpdateInventoryListInUI();
                 UpdateWeaponListInUI();
                 UpdatePotionListInUI();
+                UpdateLevelStats();
 
                 // Add a blank line to the messages box, just for appearance.
                 rtbMessages.Text += Environment.NewLine;
@@ -447,8 +434,9 @@ namespace WindowsFormsApplication1
                 // Determine the amount of damage the monster does to the player
                 int damageToPlayer = RandomNumberGenerator.NumberBetween(0, _currentMonster.MaxDamage);
 
+                int realDamage = damageToPlayer - _playerLevelStats.Defense;
                 // Display message
-                rtbMessages.Text += "The " + _currentMonster.Name + " did " + damageToPlayer.ToString() + " points of damage." + Environment.NewLine;
+                rtbMessages.Text += "The " + _currentMonster.Name + " did " + realDamage.ToString() + " points of damage." + Environment.NewLine;
 
                 // Subtract damage from player
                 _player.CurrentHitPoints -= damageToPlayer;
@@ -536,12 +524,35 @@ namespace WindowsFormsApplication1
 
         private void Window_FormClosing(object sender, FormClosingEventArgs e)
         {
+            File.WriteAllText(LEVEL_DATA_FILE_NAME, _playerLevelStats.ToXmlString());
             File.WriteAllText(PLAYER_DATA_FILE_NAME, _player.ToXmlString());
+        }
+        private void UpdatePlayerStats()
+        {
+            int expNeedToLvl = _player.Level * 71;
+
+            // Refresh player information and inventory controls
+            LblHitPoints.Text = Convert.ToString(_player.CurrentHitPoints);
+            LblGold.Text = Convert.ToString(_player.Gold);
+            LblExperience.Text = Convert.ToString(_player.ExperiencePoints) + " / " + Convert.ToString(_player.Level * 71);
+            LblLevel.Text = Convert.ToString(_player.Level);
+
+            LblStrength.Text = Convert.ToString(_playerLevelStats.Strength);
+            LblMagic.Text = Convert.ToString(_playerLevelStats.Magic);
+            LblDexerity.Text = Convert.ToString(_playerLevelStats.Dexerity);
+            LblDefense.Text = Convert.ToString(_playerLevelStats.Defense);
+
+            if (_player.ExperiencePoints > expNeedToLvl)
+            {
+                _player.Level++;
+                _playerLevelStats.LevelPoints++;
+            }
         }
         private void UpdateLevelStats()
         {
-            _playerLevelStats.LevelPoints = Convert.ToInt32(LblLevelPoints.Text);
-            if (_playerLevelStats.LevelPoints == 0)
+            LblLevelPoints.Text = Convert.ToString(_playerLevelStats.LevelPoints);
+
+            if (_playerLevelStats.LevelPoints <= 0)
             {
                 StrAdd.Visible = false;
                 MagAdd.Visible = false;
@@ -559,27 +570,34 @@ namespace WindowsFormsApplication1
 
         private void StrAdd_Click(object sender, EventArgs e)
         {
-            int StrengthPoints = Convert.ToInt32(LblStrength.Text);
             _playerLevelStats.Strength++;
             _playerLevelStats.LevelPoints--;
+            UpdatePlayerStats();
+            UpdateLevelStats();
         }
 
         private void MagAdd_Click(object sender, EventArgs e)
         {
-            int MagicPoints = Convert.ToInt32(LblMagic.Text);
-            MagicPoints++;
+            _playerLevelStats.Magic++;
+            _playerLevelStats.LevelPoints--;
+            UpdatePlayerStats();
+            UpdateLevelStats();
         }
 
         private void DefAdd_Click(object sender, EventArgs e)
         {
-            int DefensePoints = Convert.ToInt32(LblDefense.Text);
-            DefensePoints++;
+            _playerLevelStats.Defense++;
+            _playerLevelStats.LevelPoints--;
+            UpdatePlayerStats();
+            UpdateLevelStats();
         }
 
         private void DexAdd_Click(object sender, EventArgs e)
         {
-            int DexerityPoints = Convert.ToInt32(LblDexerity.Text);
-            DexerityPoints++;
+            _playerLevelStats.Dexerity--;
+            _playerLevelStats.LevelPoints--;
+            UpdatePlayerStats();
+            UpdateLevelStats();
         }
     }
 }
