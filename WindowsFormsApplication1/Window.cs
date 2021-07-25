@@ -435,6 +435,7 @@ namespace WindowsFormsApplication1
                 int damageToPlayer = RandomNumberGenerator.NumberBetween(0, _currentMonster.MaxDamage);
 
                 int realDamage = damageToPlayer - _playerLevelStats.Defense;
+                if(realDamage <= 0) { realDamage = 0; }
                 // Display message
                 rtbMessages.Text += "The " + _currentMonster.Name + " did " + realDamage.ToString() + " points of damage." + Environment.NewLine;
 
