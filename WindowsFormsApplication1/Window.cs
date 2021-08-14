@@ -356,6 +356,8 @@ namespace WindowsFormsApplication1
             // Determine the amount of damage to do to the monster
             int damageToMonster = RandomNumberGenerator.NumberBetween(currentWeapon.MinDamage, currentWeapon.MaxDamage);
 
+            damageToMonster += _playerLevelStats.Strength / 2;
+
             // Apply the damage to the monster's CurrentHitPoints
             _currentMonster.CurrentHitPoints -= damageToMonster;
 
