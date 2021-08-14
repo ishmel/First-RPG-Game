@@ -282,7 +282,7 @@
             // 
             this.Area.AutoSize = true;
             this.Area.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Area.Location = new System.Drawing.Point(490, 3);
+            this.Area.Location = new System.Drawing.Point(497, 1);
             this.Area.Name = "Area";
             this.Area.Size = new System.Drawing.Size(54, 15);
             this.Area.TabIndex = 21;
