@@ -368,14 +368,17 @@ namespace WindowsFormsApplication1
                 // Monster is dead
                 rtbMessages.Text += Environment.NewLine;
                 rtbMessages.Text += "You defeated the " + _currentMonster.Name + Environment.NewLine;
+                rtbMessages.Text += Environment.NewLine;
 
                 // Give player experience points for killing the monster
                 _player.AddExperiencePoints(_currentMonster.RewardExperience);
                 rtbMessages.Text += "You receive " + _currentMonster.RewardExperience.ToString() + " experience points" + Environment.NewLine;
+                rtbMessages.Text += Environment.NewLine;
 
                 // Give player gold for killing the monster 
                 _player.Gold += _currentMonster.RewardGold;
                 rtbMessages.Text += "You receive " + _currentMonster.RewardGold.ToString() + " gold" + Environment.NewLine;
+                rtbMessages.Text += Environment.NewLine;
 
                 // Get random loot items from the monster
                 List<InventoryItem> lootedItems = new List<InventoryItem>();
@@ -386,6 +389,7 @@ namespace WindowsFormsApplication1
                     if (RandomNumberGenerator.NumberBetween(1, 100) <= lootItem.DropPercentage)
                     {
                         lootedItems.Add(new InventoryItem(lootItem.Details, 1));
+                        rtbMessages.Text += Environment.NewLine;
                     }
                 }
 
@@ -429,6 +433,8 @@ namespace WindowsFormsApplication1
             }
             else
             {
+                rtbMessages.Text += Environment.NewLine;
+
                 // Monster is still alive
 
                 // Determine the amount of damage the monster does to the player
@@ -438,6 +444,7 @@ namespace WindowsFormsApplication1
                 if(realDamage <= 0) { realDamage = 0; }
                 // Display message
                 rtbMessages.Text += "The " + _currentMonster.Name + " did " + realDamage.ToString() + " points of damage." + Environment.NewLine;
+                rtbMessages.Text += Environment.NewLine;
 
                 // Subtract damage from player
                 _player.CurrentHitPoints -= damageToPlayer;
@@ -535,7 +542,7 @@ namespace WindowsFormsApplication1
             // Refresh player information and inventory controls
             LblHitPoints.Text = Convert.ToString(_player.CurrentHitPoints);
             LblGold.Text = Convert.ToString(_player.Gold);
-            LblExperience.Text = Convert.ToString(_player.ExperiencePoints) + " / " + Convert.ToString(_player.Level * 71);
+            LblExperience.Text = Convert.ToString(_player.ExperiencePoints) + " / " + Convert.ToString(expNeedToLvl);
             LblLevel.Text = Convert.ToString(_player.Level);
 
             LblStrength.Text = Convert.ToString(_playerLevelStats.Strength);
@@ -552,20 +559,19 @@ namespace WindowsFormsApplication1
         private void UpdateLevelStats()
         {
             LblLevelPoints.Text = Convert.ToString(_playerLevelStats.LevelPoints);
-
-            if (_playerLevelStats.LevelPoints <= 0)
-            {
-                StrAdd.Visible = false;
-                MagAdd.Visible = false;
-                DexAdd.Visible = false;
-                DefAdd.Visible = false;
-            }
-            else
-            {
+            bool levelUpAva = _playerLevelStats.LevelPoints > 0;
+            if (levelUpAva){
                 StrAdd.Visible = true;
                 MagAdd.Visible = true;
                 DexAdd.Visible = true;
                 DefAdd.Visible = true;
+            }
+            else{
+
+                StrAdd.Visible = false;
+                MagAdd.Visible = false;
+                DexAdd.Visible = false;
+                DefAdd.Visible = false;
             }
         }
 
@@ -595,7 +601,7 @@ namespace WindowsFormsApplication1
 
         private void DexAdd_Click(object sender, EventArgs e)
         {
-            _playerLevelStats.Dexerity--;
+            _playerLevelStats.Dexerity++;
             _playerLevelStats.LevelPoints--;
             UpdatePlayerStats();
             UpdateLevelStats();
