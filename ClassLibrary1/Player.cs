@@ -17,11 +17,10 @@ namespace Engine
         public List<InventoryItem> Inventory { get; set; }
         public List<PlayerQuest> Quests { get; set; }
 
-        private Player(int currentHitPoints, int maximumHitPoints, int gold, int experiencePoints, int level) : base(currentHitPoints, maximumHitPoints)
+        private Player(int currentHitPoints, int maximumHitPoints, int gold, int experiencePoints) : base(currentHitPoints, maximumHitPoints)
         {
             Gold = gold;
             ExperiencePoints = experiencePoints;
-            Level = level;
 
             Inventory = new List<InventoryItem>();
             Quests = new List<PlayerQuest>();
@@ -166,7 +165,8 @@ namespace Engine
         }
         public static Player CreateDefaultPlayer()
         {
-            Player player = new Player(10, 10, 20, 0, 1);
+            Player player = new Player(10, 10, 20, 0);
+            player.Level++;
             player.Inventory.Add(new InventoryItem(World.ItemByID(World.ITEM_ID_RUSTY_SWORD), 1));
             player.CurrentLocation = World.LocationByID(World.LOCATION_ID_HOME);
 
@@ -185,9 +185,9 @@ namespace Engine
                 int maximumHitPoints = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/MaximumHitPoints").InnerText);
                 int gold = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/Gold").InnerText);
                 int experiencePoints = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/ExperiencePoints").InnerText);
-                int level = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/Level").InnerText);
 
-                Player player = new Player(currentHitPoints, maximumHitPoints, gold, experiencePoints, level);
+
+                Player player = new Player(currentHitPoints, maximumHitPoints, gold, experiencePoints);
 
                 int currentLocationID = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/CurrentLocation").InnerText);
                 player.CurrentLocation = World.LocationByID(currentLocationID);
